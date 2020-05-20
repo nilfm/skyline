@@ -1,13 +1,11 @@
-# importa l'API de Telegram
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import skyline
+from skyline import *
 import os
 import pickle
 
-
 def start_message(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text="SkyLineBot\nBenvingut Nil!")
-
 
 def author_message(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text="SkyLineBot\n@ Nil Fons Miret, 2020")
@@ -92,7 +90,7 @@ def save(update, context):
     path = os.path.join("data", user_id, f"{identifier}.sky")
 
     with open(path, "wb") as f:
-        pickle.dump(skylines[identifier], f)
+        pickle.dump(users[user_id][identifier], f)
 
     context.bot.send_message(chat_id=update.effective_chat.id, text="Skyline desada correctament")
 
@@ -116,7 +114,7 @@ def load(update, context):
         return
 
     with open(path, "wb") as f:
-        skylines[identifier] = pickle.load(f)
+        users[user_id][identifier] = pickle.load(f)
 
     context.bot.send_message(chat_id=update.effective_chat.id, text="Skyline carregada correctament")
 
@@ -124,6 +122,9 @@ def load(update, context):
 def handle_message(update, context):
     # TODO: Parse message
     context.bot.send_message(chat_id=update.effective_chat.id, text=update.message.text)
+    # to send an image
+    # buf = sky.plot()
+    # context.bot.send_photo(chat_id=update.effective_chat.id, photo=buf)
 
 
 users = {}
