@@ -1,6 +1,7 @@
 import random
 import matplotlib.pyplot as plt
 
+
 class Point:
     def __init__(self, x, y):
         self.x = x
@@ -54,7 +55,7 @@ class Skyline:
         for p1, p2 in zip(self.points, self.points[1:]):
             xs.append(p1.x)
             heights.append(p1.y)
-            widths.append(p2.x-p1.x)
+            widths.append(p2.x - p1.x)
 
         plt.bar(xs, heights, widths, align="edge")
         plt.show()
@@ -80,7 +81,7 @@ class Skyline:
         buildings = [Building(start, height, end) for start, height, end in coordinates]
         return create_skyline(buildings)
 
-    # Pre: xmax > xmin, h >= 0, w <= xmax-xmin 
+    # Pre: xmax > xmin, h >= 0, w <= xmax-xmin
     @staticmethod
     def create_from_random_buildings(self, n, h, w, xmin, xmax):
         buildings = []

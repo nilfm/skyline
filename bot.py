@@ -47,7 +47,7 @@ def lst(update, context):
     create_data_dir(user_id)
     if user_id not in users:
         users[user_id] = {}
-    
+
     skylines = users[user_id]
     if not skylines:
         lst_text = "No hi ha cap skyline desat"
@@ -67,7 +67,7 @@ def clean(update, context):
 
 
 def create_data_dir(user_id):
-    path = os.path.join("data", user_id)
+    path = os.path.join("data", str(user_id))
     if not os.path.isdir(path):
         os.makedirs(path)
 
@@ -75,9 +75,10 @@ def create_data_dir(user_id):
 def save(update, context):
     user_id = update.message.chat.id
     create_data_dir(user_id)
+
     if user_id not in users:
         users[user_id] = {}
-    
+
     if len(context.args) != 1:
         context.bot.send_message(chat_id=update.effective_chat.id, text="Arguments invàlids. Format: save <id>")
         return
@@ -99,7 +100,7 @@ def save(update, context):
 def load(update, context):
     user_id = update.message.chat.id
     create_data_dir(user_id)
-    
+
     if user_id not in users:
         users[user_id] = {}
 
@@ -123,6 +124,7 @@ def load(update, context):
 def handle_message(update, context):
     # TODO: Parse message
     context.bot.send_message(chat_id=update.effective_chat.id, text=update.message.text)
+
 
 users = {}
 
