@@ -2,7 +2,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from cl.SkylineLexer import SkylineLexer
 from cl.SkylineParser import SkylineParser
 from cl.TreeVisitor import TreeVisitor
-from skyline import Skyline, Point
+from skyline import Skyline, Point, WrongArgumentException
 import os
 import pickle
 import sys
@@ -147,7 +147,9 @@ def handle_message(update, context):
         response = f"area: {sky.area()}\nalçada: {sky.height()}"
         context.bot.send_photo(chat_id=update.effective_chat.id, photo=sky.plot())
         context.bot.send_message(chat_id=update.effective_chat.id, text=response)
-    except:
+    except WrongArgumentException as e:
+        context.bot.send_message(chat_id=update.effective_chat.id, text=f"Error: {e}")
+    except Exception as e:
         context.bot.send_message(chat_id=update.effective_chat.id, text="No he entès el teu missatge :(")
 
 

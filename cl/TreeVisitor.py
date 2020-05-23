@@ -5,7 +5,7 @@ else:
     from cl.SkylineParser import SkylineParser
     from cl.SkylineVisitor import SkylineVisitor
     
-from skyline import Skyline
+from skyline import Skyline, WrongArgumentException
 
 class TreeVisitor(SkylineVisitor):   
     def __init__(self, skylines):
@@ -35,7 +35,10 @@ class TreeVisitor(SkylineVisitor):
             result = self.visit(n)
             # Case 1: The expr is an identifier
             if isinstance(result, str):
-                return self.skylines[result]
+                try:
+                    return self.skylines[result]
+                except:
+                    raise WrongArgumentException(f"{result} no és un identificador definit")
             # Case 2: The expr is a constructor
             else:
                 return result

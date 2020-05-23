@@ -2,6 +2,9 @@ import random
 import matplotlib.pyplot as plt
 from io import BytesIO
 
+class WrongArgumentException(Exception):
+    pass
+
 class Point:
     def __init__(self, x, y):
         """
@@ -17,24 +20,6 @@ class Point:
         Returns a string representing a Point object
         """
         return f"<Point ({self.x}, {self.y})>"
-
-
-class Building:
-    def __init__(self, start, height, end):
-        """
-        Constructs a Building object from its start and end x-coordinates and height
-        Input: Start and end x-coordinates and height
-        Complexity: Constant
-        """
-        self.start = Point(start, height)
-        self.end = Point(end, 0)
-
-    def __repr__(self):
-        """
-        Returns a string representing a Building object
-        """
-        return f"<Building with start {self.start} and end {self.end}>"
-
 
 class Skyline:
     def __init__(self, points):
@@ -55,6 +40,8 @@ class Skyline:
     def add(a, b):
         if isinstance(b, int):
             return a.shift_right(b)
+        elif isinstance(a, int):
+            return b.shift_right(a)
         else:
             return Skyline.join_two_skylines(a, b)
             
@@ -62,6 +49,8 @@ class Skyline:
     def prod(a, b):
         if isinstance(b, int):
             return a.replicate(b)
+        elif isinstance(a, int):
+            return b.replicate(a)
         else:
             return Skyline.intersect_two_skylines(a, b)
     
@@ -75,6 +64,8 @@ class Skyline:
         Input: Number of times to be replicated
         Complexity: Linear in the number of points of the result
         """
+        if not self.points:
+            return Skyline([])
         result = []
         width = self.points[-1].x - self.points[0].x
         for i in range(n):
@@ -91,7 +82,7 @@ class Skyline:
         Input: Number of units to be shifted
         Complexity: Linear in the number of points
         """
-        return Skyline([Point(p.x + displacement, p.y) for p in self.points])
+        return Skyline([Point(p.x + n, p.y) for p in self.points])
 
     def shift_left(self, n):
         """
@@ -106,6 +97,8 @@ class Skyline:
         Constructs a Skyline object with the result of reflecting the skyline
         Complexity: Linear in the number of points
         """
+        if not self.points:
+            return Skyline([])
         x_min = self.points[0].x
         x_max = self.points[-1].x
         backward = self.points[::-1]
@@ -128,6 +121,8 @@ class Skyline:
         Returns the maximum height that the skyline achieves
         Complexity: Linear in the number of points
         """
+        if not self.points:
+            return 0
         return max(p.y for p in self.points)
 
     def plot(self):
@@ -158,11 +153,12 @@ class Skyline:
         Input: Start and end x-coordinates and height
         Complexity: Constant
         """
-        if end <= start or height < 0:
-            raise Exception()
+        if end <= start:
+            raise WrongArgumentException("La coordenada xmax ha de ser major que xmin")
+        if height < 0:
+            raise WrongArgumentException("L'altura ha de ser no negativa")
             
-        building = Building(start, height, end)
-        points = [building.start, building.end]
+        points = [Point(start, height), Point(end, 0)]
         return Skyline(points)
 
     @staticmethod
@@ -182,17 +178,20 @@ class Skyline:
         Input: Number of buildings n, maximum height h, maximum width w, minimum x-coordinate xmin, maximum x-coordinate xmax
         Complexity: n*log(n)
         """
-        if xmax <= xmin or h < 0 or w > xmax-xmin:
-            raise Exception()
-            
+        if xmax <= xmin:
+            raise WrongArgumentException("La coordenada xmax ha de ser més gran que xmin")
+        if h < 0:
+            raise WrongArgumentException("L'altura ha de ser no negativa")
+        if w > xmax-xmin:
+            raise WrongArgumentException("L'amplada ha de ser menor o igual a xmax-xmin")
+        
         skylines = []
         for _ in range(n):
             width = random.randint(1, w)
             height = random.randint(0, h)
             start = random.randint(xmin, xmax - width)
             end = start + width
-            building = Building(start, height, end)
-            points = [building.start, building.end]
+            points = [Point(start, height), Point(end, 0)]
             skylines.append(Skyline(points))
         return Skyline.create_skyline(skylines)
 
@@ -221,6 +220,10 @@ class Skyline:
         Input: Two Skyline objects
         Complexity: Linear in the number of points of both skylines
         """
+        if not skyline1:
+            return skyline2
+        if not skyline2:
+            return skyline1
         i = 0
         j = 0
         height1 = 0
@@ -270,6 +273,8 @@ class Skyline:
         Input: List of Skyline objects
         Complexity: O(N*logN) where N is the number of skylines        
         """
+        if not skylines:
+            return Skyline([])
         return Skyline.recursive_join_skylines(skylines, 0, len(skylines) - 1)
 
     @staticmethod
@@ -310,9 +315,11 @@ class Skyline:
             else:
                 Skyline.add_to_result(result, p1.x, min(p1.y, p2.y), min)
                 j += 1
-                            
-        last1 = skyline1.points[-1]
-        last2 = skyline2.points[-1]
-        Skyline.add_to_result(result, min(last1.x, last2.x), 0, min)
         
+        # if result is nonempty, need to add the zero point at the end
+        if result:
+            last1 = skyline1.points[-1]
+            last2 = skyline2.points[-1]
+            Skyline.add_to_result(result, min(last1.x, last2.x), 0, min)
+                
         return Skyline(result)
