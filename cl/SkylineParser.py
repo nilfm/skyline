@@ -5,7 +5,6 @@ from io import StringIO
 from typing.io import TextIO
 import sys
 
-
 def serializedATN():
     with StringIO() as buf:
         buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\20")
@@ -23,11 +22,11 @@ def serializedATN():
         buf.write("\2\24\25\5\4\3\2\25\26\7\2\2\3\26\3\3\2\2\2\27\30\5\20")
         buf.write("\t\2\30\31\7\6\2\2\31\32\5\6\4\2\32\35\3\2\2\2\33\35\5")
         buf.write("\6\4\2\34\27\3\2\2\2\34\33\3\2\2\2\35\5\3\2\2\2\36\37")
-        buf.write('\b\4\1\2\37\60\5\b\5\2 \60\5\20\t\2!"\7\13\2\2"#\5\6')
-        buf.write("\4\2#$\7\f\2\2$\60\3\2\2\2%&\7\b\2\2&\60\5\6\4\n'(\5")
+        buf.write("\b\4\1\2\37\60\5\b\5\2 \60\5\20\t\2!\"\7\13\2\2\"#\5\6")
+        buf.write("\4\2#$\7\f\2\2$\60\3\2\2\2%&\7\b\2\2&\60\5\6\4\n\'(\5")
         buf.write("\22\n\2()\7\t\2\2)*\5\6\4\b*\60\3\2\2\2+,\5\22\n\2,-\7")
         buf.write("\7\2\2-.\5\6\4\4.\60\3\2\2\2/\36\3\2\2\2/ \3\2\2\2/!\3")
-        buf.write("\2\2\2/%\3\2\2\2/'\3\2\2\2/+\3\2\2\2\60B\3\2\2\2\61\62")
+        buf.write("\2\2\2/%\3\2\2\2/\'\3\2\2\2/+\3\2\2\2\60B\3\2\2\2\61\62")
         buf.write("\f\7\2\2\62\63\7\t\2\2\63A\5\6\4\b\64\65\f\6\2\2\65\66")
         buf.write("\7\7\2\2\66A\5\6\4\7\678\f\t\2\289\7\t\2\29A\5\22\n\2")
         buf.write(":;\f\5\2\2;<\7\7\2\2<A\5\22\n\2=>\f\3\2\2>?\7\b\2\2?A")
@@ -45,19 +44,23 @@ def serializedATN():
         return buf.getvalue()
 
 
-class SkylineParser(Parser):
+class SkylineParser ( Parser ):
 
     grammarFileName = "Skyline.g4"
 
     atn = ATNDeserializer().deserialize(serializedATN())
 
-    decisionsToDFA = [DFA(ds, i) for i, ds in enumerate(atn.decisionToState)]
+    decisionsToDFA = [ DFA(ds, i) for i, ds in enumerate(atn.decisionToState) ]
 
     sharedContextCache = PredictionContextCache()
 
-    literalNames = ["<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", "':='", "'+'", "'-'", "'*'", "','", "'('", "')'", "'['", "']'"]
+    literalNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
+                     "':='", "'+'", "'-'", "'*'", "','", "'('", "')'", "'['", 
+                     "']'" ]
 
-    symbolicNames = ["<INVALID>", "VALID_ID", "VALID_NUM", "WS", "ASSIG", "PLUS", "MINUS", "PROD", "SEP", "LEFT_PAREN", "RIGHT_PAREN", "LEFT_SQUARE", "RIGHT_SQUARE", "DIGIT", "LETTER"]
+    symbolicNames = [ "<INVALID>", "VALID_ID", "VALID_NUM", "WS", "ASSIG", 
+                      "PLUS", "MINUS", "PROD", "SEP", "LEFT_PAREN", "RIGHT_PAREN", 
+                      "LEFT_SQUARE", "RIGHT_SQUARE", "DIGIT", "LETTER" ]
 
     RULE_root = 0
     RULE_base_expr = 1
@@ -69,37 +72,43 @@ class SkylineParser(Parser):
     RULE_identifier = 7
     RULE_num = 8
 
-    ruleNames = ["root", "base_expr", "expr", "constructor", "single_building", "multiple_buildings", "random_buildings", "identifier", "num"]
+    ruleNames =  [ "root", "base_expr", "expr", "constructor", "single_building", 
+                   "multiple_buildings", "random_buildings", "identifier", 
+                   "num" ]
 
     EOF = Token.EOF
-    VALID_ID = 1
-    VALID_NUM = 2
-    WS = 3
-    ASSIG = 4
-    PLUS = 5
-    MINUS = 6
-    PROD = 7
-    SEP = 8
-    LEFT_PAREN = 9
-    RIGHT_PAREN = 10
-    LEFT_SQUARE = 11
-    RIGHT_SQUARE = 12
-    DIGIT = 13
-    LETTER = 14
+    VALID_ID=1
+    VALID_NUM=2
+    WS=3
+    ASSIG=4
+    PLUS=5
+    MINUS=6
+    PROD=7
+    SEP=8
+    LEFT_PAREN=9
+    RIGHT_PAREN=10
+    LEFT_SQUARE=11
+    RIGHT_SQUARE=12
+    DIGIT=13
+    LETTER=14
 
-    def __init__(self, input: TokenStream, output: TextIO = sys.stdout):
+    def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
         self.checkVersion("4.7.2")
         self._interp = ParserATNSimulator(self, self.atn, self.decisionsToDFA, self.sharedContextCache)
         self._predicates = None
 
+
+
     class RootContext(ParserRuleContext):
-        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
         def base_expr(self):
-            return self.getTypedRuleContext(SkylineParser.Base_exprContext, 0)
+            return self.getTypedRuleContext(SkylineParser.Base_exprContext,0)
+
 
         def EOF(self):
             return self.getToken(SkylineParser.EOF, 0)
@@ -107,11 +116,14 @@ class SkylineParser(Parser):
         def getRuleIndex(self):
             return SkylineParser.RULE_root
 
-        def accept(self, visitor: ParseTreeVisitor):
-            if hasattr(visitor, "visitRoot"):
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitRoot" ):
                 return visitor.visitRoot(self)
             else:
                 return visitor.visitChildren(self)
+
+
+
 
     def root(self):
 
@@ -132,27 +144,33 @@ class SkylineParser(Parser):
         return localctx
 
     class Base_exprContext(ParserRuleContext):
-        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
         def identifier(self):
-            return self.getTypedRuleContext(SkylineParser.IdentifierContext, 0)
+            return self.getTypedRuleContext(SkylineParser.IdentifierContext,0)
+
 
         def ASSIG(self):
             return self.getToken(SkylineParser.ASSIG, 0)
 
         def expr(self):
-            return self.getTypedRuleContext(SkylineParser.ExprContext, 0)
+            return self.getTypedRuleContext(SkylineParser.ExprContext,0)
+
 
         def getRuleIndex(self):
             return SkylineParser.RULE_base_expr
 
-        def accept(self, visitor: ParseTreeVisitor):
-            if hasattr(visitor, "visitBase_expr"):
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitBase_expr" ):
                 return visitor.visitBase_expr(self)
             else:
                 return visitor.visitChildren(self)
+
+
+
 
     def base_expr(self):
 
@@ -161,7 +179,7 @@ class SkylineParser(Parser):
         try:
             self.state = 26
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input, 0, self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,0,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 21
@@ -178,6 +196,7 @@ class SkylineParser(Parser):
                 self.expr(0)
                 pass
 
+
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -187,24 +206,28 @@ class SkylineParser(Parser):
         return localctx
 
     class ExprContext(ParserRuleContext):
-        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
         def constructor(self):
-            return self.getTypedRuleContext(SkylineParser.ConstructorContext, 0)
+            return self.getTypedRuleContext(SkylineParser.ConstructorContext,0)
+
 
         def identifier(self):
-            return self.getTypedRuleContext(SkylineParser.IdentifierContext, 0)
+            return self.getTypedRuleContext(SkylineParser.IdentifierContext,0)
+
 
         def LEFT_PAREN(self):
             return self.getToken(SkylineParser.LEFT_PAREN, 0)
 
-        def expr(self, i: int = None):
+        def expr(self, i:int=None):
             if i is None:
                 return self.getTypedRuleContexts(SkylineParser.ExprContext)
             else:
-                return self.getTypedRuleContext(SkylineParser.ExprContext, i)
+                return self.getTypedRuleContext(SkylineParser.ExprContext,i)
+
 
         def RIGHT_PAREN(self):
             return self.getToken(SkylineParser.RIGHT_PAREN, 0)
@@ -213,7 +236,8 @@ class SkylineParser(Parser):
             return self.getToken(SkylineParser.MINUS, 0)
 
         def num(self):
-            return self.getTypedRuleContext(SkylineParser.NumContext, 0)
+            return self.getTypedRuleContext(SkylineParser.NumContext,0)
+
 
         def PROD(self):
             return self.getToken(SkylineParser.PROD, 0)
@@ -224,13 +248,15 @@ class SkylineParser(Parser):
         def getRuleIndex(self):
             return SkylineParser.RULE_expr
 
-        def accept(self, visitor: ParseTreeVisitor):
-            if hasattr(visitor, "visitExpr"):
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitExpr" ):
                 return visitor.visitExpr(self)
             else:
                 return visitor.visitChildren(self)
 
-    def expr(self, _p: int = 0):
+
+
+    def expr(self, _p:int=0):
         _parentctx = self._ctx
         _parentState = self.state
         localctx = SkylineParser.ExprContext(self, self._ctx, _parentState)
@@ -241,7 +267,7 @@ class SkylineParser(Parser):
             self.enterOuterAlt(localctx, 1)
             self.state = 45
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input, 1, self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,1,self._ctx)
             if la_ == 1:
                 self.state = 29
                 self.constructor()
@@ -286,25 +312,25 @@ class SkylineParser(Parser):
                 self.expr(2)
                 pass
 
+
             self._ctx.stop = self._input.LT(-1)
             self.state = 64
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input, 3, self._ctx)
-            while _alt != 2 and _alt != ATN.INVALID_ALT_NUMBER:
-                if _alt == 1:
+            _alt = self._interp.adaptivePredict(self._input,3,self._ctx)
+            while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
+                if _alt==1:
                     if self._parseListeners is not None:
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
                     self.state = 62
                     self._errHandler.sync(self)
-                    la_ = self._interp.adaptivePredict(self._input, 2, self._ctx)
+                    la_ = self._interp.adaptivePredict(self._input,2,self._ctx)
                     if la_ == 1:
                         localctx = SkylineParser.ExprContext(self, _parentctx, _parentState)
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
                         self.state = 47
                         if not self.precpred(self._ctx, 5):
                             from antlr4.error.Errors import FailedPredicateException
-
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 5)")
                         self.state = 48
                         self.match(SkylineParser.PROD)
@@ -318,7 +344,6 @@ class SkylineParser(Parser):
                         self.state = 50
                         if not self.precpred(self._ctx, 4):
                             from antlr4.error.Errors import FailedPredicateException
-
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 4)")
                         self.state = 51
                         self.match(SkylineParser.PLUS)
@@ -332,7 +357,6 @@ class SkylineParser(Parser):
                         self.state = 53
                         if not self.precpred(self._ctx, 7):
                             from antlr4.error.Errors import FailedPredicateException
-
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 7)")
                         self.state = 54
                         self.match(SkylineParser.PROD)
@@ -346,7 +370,6 @@ class SkylineParser(Parser):
                         self.state = 56
                         if not self.precpred(self._ctx, 3):
                             from antlr4.error.Errors import FailedPredicateException
-
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 3)")
                         self.state = 57
                         self.match(SkylineParser.PLUS)
@@ -360,7 +383,6 @@ class SkylineParser(Parser):
                         self.state = 59
                         if not self.precpred(self._ctx, 1):
                             from antlr4.error.Errors import FailedPredicateException
-
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 1)")
                         self.state = 60
                         self.match(SkylineParser.MINUS)
@@ -368,9 +390,10 @@ class SkylineParser(Parser):
                         self.num()
                         pass
 
+             
                 self.state = 66
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input, 3, self._ctx)
+                _alt = self._interp.adaptivePredict(self._input,3,self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -381,27 +404,34 @@ class SkylineParser(Parser):
         return localctx
 
     class ConstructorContext(ParserRuleContext):
-        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
         def single_building(self):
-            return self.getTypedRuleContext(SkylineParser.Single_buildingContext, 0)
+            return self.getTypedRuleContext(SkylineParser.Single_buildingContext,0)
+
 
         def multiple_buildings(self):
-            return self.getTypedRuleContext(SkylineParser.Multiple_buildingsContext, 0)
+            return self.getTypedRuleContext(SkylineParser.Multiple_buildingsContext,0)
+
 
         def random_buildings(self):
-            return self.getTypedRuleContext(SkylineParser.Random_buildingsContext, 0)
+            return self.getTypedRuleContext(SkylineParser.Random_buildingsContext,0)
+
 
         def getRuleIndex(self):
             return SkylineParser.RULE_constructor
 
-        def accept(self, visitor: ParseTreeVisitor):
-            if hasattr(visitor, "visitConstructor"):
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitConstructor" ):
                 return visitor.visitConstructor(self)
             else:
                 return visitor.visitChildren(self)
+
+
+
 
     def constructor(self):
 
@@ -410,7 +440,7 @@ class SkylineParser(Parser):
         try:
             self.state = 70
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input, 4, self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,4,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 67
@@ -429,6 +459,7 @@ class SkylineParser(Parser):
                 self.random_buildings()
                 pass
 
+
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -438,20 +469,22 @@ class SkylineParser(Parser):
         return localctx
 
     class Single_buildingContext(ParserRuleContext):
-        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
         def LEFT_PAREN(self):
             return self.getToken(SkylineParser.LEFT_PAREN, 0)
 
-        def num(self, i: int = None):
+        def num(self, i:int=None):
             if i is None:
                 return self.getTypedRuleContexts(SkylineParser.NumContext)
             else:
-                return self.getTypedRuleContext(SkylineParser.NumContext, i)
+                return self.getTypedRuleContext(SkylineParser.NumContext,i)
 
-        def SEP(self, i: int = None):
+
+        def SEP(self, i:int=None):
             if i is None:
                 return self.getTokens(SkylineParser.SEP)
             else:
@@ -463,11 +496,14 @@ class SkylineParser(Parser):
         def getRuleIndex(self):
             return SkylineParser.RULE_single_building
 
-        def accept(self, visitor: ParseTreeVisitor):
-            if hasattr(visitor, "visitSingle_building"):
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitSingle_building" ):
                 return visitor.visitSingle_building(self)
             else:
                 return visitor.visitChildren(self)
+
+
+
 
     def single_building(self):
 
@@ -498,23 +534,25 @@ class SkylineParser(Parser):
         return localctx
 
     class Multiple_buildingsContext(ParserRuleContext):
-        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
         def LEFT_SQUARE(self):
             return self.getToken(SkylineParser.LEFT_SQUARE, 0)
 
-        def single_building(self, i: int = None):
+        def single_building(self, i:int=None):
             if i is None:
                 return self.getTypedRuleContexts(SkylineParser.Single_buildingContext)
             else:
-                return self.getTypedRuleContext(SkylineParser.Single_buildingContext, i)
+                return self.getTypedRuleContext(SkylineParser.Single_buildingContext,i)
+
 
         def RIGHT_SQUARE(self):
             return self.getToken(SkylineParser.RIGHT_SQUARE, 0)
 
-        def SEP(self, i: int = None):
+        def SEP(self, i:int=None):
             if i is None:
                 return self.getTokens(SkylineParser.SEP)
             else:
@@ -523,17 +561,20 @@ class SkylineParser(Parser):
         def getRuleIndex(self):
             return SkylineParser.RULE_multiple_buildings
 
-        def accept(self, visitor: ParseTreeVisitor):
-            if hasattr(visitor, "visitMultiple_buildings"):
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitMultiple_buildings" ):
                 return visitor.visitMultiple_buildings(self)
             else:
                 return visitor.visitChildren(self)
+
+
+
 
     def multiple_buildings(self):
 
         localctx = SkylineParser.Multiple_buildingsContext(self, self._ctx, self.state)
         self.enterRule(localctx, 10, self.RULE_multiple_buildings)
-        self._la = 0  # Token type
+        self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 80
@@ -543,7 +584,7 @@ class SkylineParser(Parser):
             self.state = 86
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while _la == SkylineParser.SEP:
+            while _la==SkylineParser.SEP:
                 self.state = 82
                 self.match(SkylineParser.SEP)
                 self.state = 83
@@ -563,20 +604,22 @@ class SkylineParser(Parser):
         return localctx
 
     class Random_buildingsContext(ParserRuleContext):
-        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
         def LEFT_PAREN(self):
             return self.getToken(SkylineParser.LEFT_PAREN, 0)
 
-        def num(self, i: int = None):
+        def num(self, i:int=None):
             if i is None:
                 return self.getTypedRuleContexts(SkylineParser.NumContext)
             else:
-                return self.getTypedRuleContext(SkylineParser.NumContext, i)
+                return self.getTypedRuleContext(SkylineParser.NumContext,i)
 
-        def SEP(self, i: int = None):
+
+        def SEP(self, i:int=None):
             if i is None:
                 return self.getTokens(SkylineParser.SEP)
             else:
@@ -588,11 +631,14 @@ class SkylineParser(Parser):
         def getRuleIndex(self):
             return SkylineParser.RULE_random_buildings
 
-        def accept(self, visitor: ParseTreeVisitor):
-            if hasattr(visitor, "visitRandom_buildings"):
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitRandom_buildings" ):
                 return visitor.visitRandom_buildings(self)
             else:
                 return visitor.visitChildren(self)
+
+
+
 
     def random_buildings(self):
 
@@ -631,7 +677,8 @@ class SkylineParser(Parser):
         return localctx
 
     class IdentifierContext(ParserRuleContext):
-        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -641,11 +688,14 @@ class SkylineParser(Parser):
         def getRuleIndex(self):
             return SkylineParser.RULE_identifier
 
-        def accept(self, visitor: ParseTreeVisitor):
-            if hasattr(visitor, "visitIdentifier"):
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitIdentifier" ):
                 return visitor.visitIdentifier(self)
             else:
                 return visitor.visitChildren(self)
+
+
+
 
     def identifier(self):
 
@@ -664,7 +714,8 @@ class SkylineParser(Parser):
         return localctx
 
     class NumContext(ParserRuleContext):
-        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
@@ -674,11 +725,14 @@ class SkylineParser(Parser):
         def getRuleIndex(self):
             return SkylineParser.RULE_num
 
-        def accept(self, visitor: ParseTreeVisitor):
-            if hasattr(visitor, "visitNum"):
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitNum" ):
                 return visitor.visitNum(self)
             else:
                 return visitor.visitChildren(self)
+
+
+
 
     def num(self):
 
@@ -696,7 +750,9 @@ class SkylineParser(Parser):
             self.exitRule()
         return localctx
 
-    def sempred(self, localctx: RuleContext, ruleIndex: int, predIndex: int):
+
+
+    def sempred(self, localctx:RuleContext, ruleIndex:int, predIndex:int):
         if self._predicates == None:
             self._predicates = dict()
         self._predicates[2] = self.expr_sempred
@@ -706,18 +762,27 @@ class SkylineParser(Parser):
         else:
             return pred(localctx, predIndex)
 
-    def expr_sempred(self, localctx: ExprContext, predIndex: int):
-        if predIndex == 0:
-            return self.precpred(self._ctx, 5)
+    def expr_sempred(self, localctx:ExprContext, predIndex:int):
+            if predIndex == 0:
+                return self.precpred(self._ctx, 5)
+         
 
-        if predIndex == 1:
-            return self.precpred(self._ctx, 4)
+            if predIndex == 1:
+                return self.precpred(self._ctx, 4)
+         
 
-        if predIndex == 2:
-            return self.precpred(self._ctx, 7)
+            if predIndex == 2:
+                return self.precpred(self._ctx, 7)
+         
 
-        if predIndex == 3:
-            return self.precpred(self._ctx, 3)
+            if predIndex == 3:
+                return self.precpred(self._ctx, 3)
+         
 
-        if predIndex == 4:
-            return self.precpred(self._ctx, 1)
+            if predIndex == 4:
+                return self.precpred(self._ctx, 1)
+         
+
+
+
+
