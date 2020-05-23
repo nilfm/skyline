@@ -1,4 +1,5 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+import telegram
 from cl.SkylineLexer import SkylineLexer
 from cl.SkylineParser import SkylineParser
 from cl.EvalVisitor import EvalVisitor
@@ -19,31 +20,33 @@ def author_message(update, context):
 
 def help_message(update, context):
     help_text = """
-/start - Dóna la benvinguda
-/author - Dóna informació sobre l'autor
-/help - Mostra les comandes disponibles
-/lst - Mostra els identificadors definits i les seves àrees
-/clean - Esborra tots els identificadors definits
-/save id - Guarda un skyline amb identificador id
-/load id - Carrega un skyline amb identificador id
+*Comandes*
+`/start` - Dóna la benvinguda
+`/author` - Dóna informació sobre l'autor
+`/help` - Mostra les comandes disponibles
+`/lst` - Mostra els identificadors definits i les seves àrees
+`/clean` - Esborra tots els identificadors definits
+`/save id` - Guarda un skyline amb identificador `id`
+`/load id` - Carrega un skyline amb identificador `id`
 
-id - Mostra una imatge del skyline amb identificador id, la seva àrea i alçada màxima
-id := expr - Guarda en l'identificador id el skyline definit per expr
+`expr` - Mostra una imatge del skyline definit per `expr`, la seva àrea i alçada màxima
+`id` - Mostra una imatge del skyline amb identificador `id`, la seva àrea i alçada màxima
+`id := expr` - Guarda en l'identificador `id` el skyline definit per `expr`
 
-Creació de skylines:
-(xmin, h, xmax) crea un skyline amb un sol edifici
-[(xmin1, h1, xmax1), ...] crea un skyline amb diversos edificis
-(n, h, w, xmin, xmax) crea n edificis, amb alçades aleatòries entre 0 i h, i amplades aleatòries entre 1 i w, amb inici i final entre xmin i xmax
+*Creació de skylines*
+`(xmin, h, xmax)` crea un skyline amb un sol edifici
+`[(xmin1, h1, xmax1), ...]` crea un skyline amb diversos edificis
+`(n, h, w, xmin, xmax)` crea `n` edificis, amb alçades aleatòries entre 0 i `h`, i amplades aleatòries entre 1 i `w`, amb inici i final entre `xmin` i `xmax`
 
-Operacions amb skylines:
-skyline + skyline: unió
-skyline * skyline: intersecció
-skyline * N: replicació N vegades del skyline
-skyline + N: desplaçament a la dreta del skyline N posicions
-skyline - N: desplaçament a l'esquerra del skyline N posicions
--skyline: reflexió del skyline
+*Operacions amb skylines*
+`skyline + skyline`: unió
+`skyline \* skyline`: intersecció
+`skyline \* N`: replicació `N` vegades del skyline
+`skyline + N`: desplaçament a la dreta del skyline `N` posicions
+`skyline - N`: desplaçament a l'esquerra del skyline `N` posicions
+`-skyline`: reflexió del skyline
     """
-    context.bot.send_message(chat_id=update.effective_chat.id, text=help_text)
+    context.bot.send_message(chat_id=update.effective_chat.id, text=help_text, parse_mode=telegram.ParseMode.MARKDOWN)
 
 
 def lst(update, context):
