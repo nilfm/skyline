@@ -45,6 +45,30 @@ class Skyline:
         """
         self.points = points
 
+    def __repr__(self):
+        result = ""
+        for point in self.points:
+            result += str(point) + "\n"
+        return result
+
+    @staticmethod
+    def add(a, b):
+        if isinstance(b, int):
+            return a.shift_right(b)
+        else:
+            return Skyline.join_two_skylines(a, b)
+            
+    @staticmethod
+    def prod(a, b):
+        if isinstance(b, int):
+            return a.replicate(b)
+        else:
+            return Skyline.intersect_two_skylines(a, b)
+    
+    @staticmethod
+    def subtract(a, b):
+        return a.shift_left(b)
+
     def replicate(self, n):
         """
         Constructs a Skyline object with the result of replicating the instance n times
@@ -52,10 +76,13 @@ class Skyline:
         Complexity: Linear in the number of points of the result
         """
         result = []
-        width = self.points[-1].x
+        width = self.points[-1].x - self.points[0].x
         for i in range(n):
             displacement = i * width
-            result.extend([Point(p.x + displacement, p.y) for p in self.points])
+            result.extend([Point(p.x + displacement, p.y) for p in self.points[:-1]])
+        last_x = self.points[-1].x + (n-1)*width
+        result.append(Point(last_x, 0))
+        
         return Skyline(result)
 
     def shift_right(self, n):
@@ -115,53 +142,59 @@ class Skyline:
             xs.append(p1.x)
             heights.append(p1.y)
             widths.append(p2.x - p1.x)
-
+        
+        plt.figure()
         plt.bar(xs, heights, widths, align="edge")
         buf = BytesIO()
         plt.savefig(buf)
         buf.seek(0)
         return buf
-        # TODO: return the plot to send to user
 
-    # Pre: end > start and height >= 0
+    # Necessary: end > start and height >= 0
     @staticmethod
-    def create_from_building(self, start, height, end):
+    def create_from_building(start, height, end):
         """
         Constructs a Skyline object with a single building
         Input: Start and end x-coordinates and height
         Complexity: Constant
         """
+        if end <= start or height < 0:
+            raise Exception()
+            
         building = Building(start, height, end)
         points = [building.start, building.end]
         return Skyline(points)
 
-    # Pre: end > start and height >= 0 for each (start, height, end) in coordinates
     @staticmethod
-    def create_from_buildings(self, coordinates):
+    def create_from_buildings(skylines):
         """
-        Constructs a Skyline object from a list of buildings
-        Input: A list of Building objects
-        Complexity: N*log(N) where N is the number of buildings
+        Constructs a Skyline object from a list of skylines
+        Input: A list of Skyline objects
+        Complexity: N*log(N) where N is the number of skylines
         """
-        buildings = [Building(start, height, end) for start, height, end in coordinates]
-        return create_skyline(buildings)
+        return Skyline.create_skyline(skylines)
 
-    # Pre: xmax > xmin, h >= 0, w <= xmax-xmin
+    # Necessary: xmax > xmin, h >= 0, w <= xmax-xmin
     @staticmethod
-    def create_from_random_buildings(self, n, h, w, xmin, xmax):
+    def create_from_random_buildings(n, h, w, xmin, xmax):
         """
         Constructs a Skyline object from parameters for random building generation
         Input: Number of buildings n, maximum height h, maximum width w, minimum x-coordinate xmin, maximum x-coordinate xmax
         Complexity: n*log(n)
         """
-        buildings = []
+        if xmax <= xmin or h < 0 or w > xmax-xmin:
+            raise Exception()
+            
+        skylines = []
         for _ in range(n):
             width = random.randint(1, w)
             height = random.randint(0, h)
             start = random.randint(xmin, xmax - width)
             end = start + width
-            buildings.append(Building(start, height, end))
-        return create_skyline(buildings)
+            building = Building(start, height, end)
+            points = [building.start, building.end]
+            skylines.append(Skyline(points))
+        return Skyline.create_skyline(skylines)
 
     @staticmethod
     def add_to_result(result, x, y, comparator=max):
@@ -216,31 +249,29 @@ class Skyline:
         return Skyline(result)
 
     @staticmethod
-    def recursive_join_skylines(buildings, left, right):
+    def recursive_join_skylines(skylines, left, right):
         """
         Creates a Skyline from a list of buildings using a method similar to merge-sort
         Input: List of Building objects, indices (left, right) that delimit the buildings to treat
         Complexity: O(N*logN) where N is the number of buildings
         """
         if left == right:
-            building = buildings[left]
-            return Skyline([building.start, building.end])
+            return skylines[left]
 
         mid = (left + right) // 2
-        buildings1 = Skyline.recursive_join_skylines(buildings, left, mid)
-        buildings2 = Skyline.recursive_join_skylines(buildings, mid + 1, right)
-        return Skyline.join_two_skylines(buildings1, buildings2)
+        skylines1 = Skyline.recursive_join_skylines(skylines, left, mid)
+        skylines2 = Skyline.recursive_join_skylines(skylines, mid + 1, right)
+        return Skyline.join_two_skylines(skylines1, skylines2)
 
     @staticmethod
-    def create_skyline(buildings):
+    def create_skyline(skylines):
         """
-        Creates a Skyline from a list of buildings using a method similar to merge-sort
-        Input: List of Building objects
-        Complexity: O(N*logN) where N is the number of buildings        
+        Creates a Skyline from a list of skylines using a method similar to merge-sort
+        Input: List of Skyline objects
+        Complexity: O(N*logN) where N is the number of skylines        
         """
-        return Skyline.recursive_join_skylines(buildings, 0, len(buildings) - 1)
+        return Skyline.recursive_join_skylines(skylines, 0, len(skylines) - 1)
 
-    # TODO: Segurament bugat i un lio infinit d'indexs i comparacions, arreglar
     @staticmethod
     def intersect_two_skylines(skyline1, skyline2):
         """
@@ -257,36 +288,31 @@ class Skyline:
             q1 = skyline1.points[i+1]
             q2 = skyline2.points[j+1]
 
-            if p1.x < p2.x:
+            # 6 possible relative positions
+            if p2.x > q1.x:
                 i += 1
-                if q1.x >= p2.x:
-                    if j == 0:
-                        Skyline.add_to_result(result, p2.x, min(p1.y, p2.y), min)
-                    else:
-                        Skyline.add_to_result(result, p1.x, p1.y, min)
-            elif p1.x > p2.x:
+            
+            elif p1.x > q2.x:
                 j += 1
-                if q2.x >= p1.x:
-                    if i == 0:
-                        Skyline.add_to_result(result, p1.x, min(p1.y, p2.y), min)
-                    else:
-                        Skyline.add_to_result(result, p2.x, p2.y, min)
+                
+            elif p1.x <= p2.x and q1.x >= q2.x:
+                Skyline.add_to_result(result, p2.x, min(p1.y, p2.y), min)
+                j += 1
+            
+            elif p2.x <= p1.x and q2.x >= q1.x:
+                Skyline.add_to_result(result, p1.x, min(p1.y, p2.y), min)
+                i += 1
+                
+            elif p1.x <= p2.x and q1.x <= q2.x:
+                Skyline.add_to_result(result, p2.x, min(p1.y, p2.y), min)
+                i += 1 
+                
             else:
                 Skyline.add_to_result(result, p1.x, min(p1.y, p2.y), min)
-                if q1.x < q2.x:
-                    i += 1
-                elif q1.x > q2.x:
-                    j += 1
-                else:
-                    i += 1
-                    j += 1
-            
-            print(f"{p1} - {q1}", f"{p2} - {q2}", sep="\n")
-            print(result)
-            input()
-            
+                j += 1
+                            
         last1 = skyline1.points[-1]
         last2 = skyline2.points[-1]
         Skyline.add_to_result(result, min(last1.x, last2.x), 0, min)
-            
+        
         return Skyline(result)

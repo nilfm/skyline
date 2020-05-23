@@ -1,8 +1,12 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-import skyline
-from skyline import *
+from cl.SkylineLexer import SkylineLexer
+from cl.SkylineParser import SkylineParser
+from cl.TreeVisitor import TreeVisitor
+from skyline import Skyline, Point
 import os
 import pickle
+import sys
+from antlr4 import *
 
 def start_message(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text="SkyLineBot\nBenvingut Nil!")
@@ -51,8 +55,9 @@ def lst(update, context):
         lst_text = "No hi ha cap skyline desat"
     else:
         lst_text = ""
-    for name, skyline in user[user_id].items():
-        lst_text += f"Skyline {name}:\n  area: {skyline.area()}\n  alçada: {skyline.height()}\n"
+    
+    for name, sky in skylines.items():
+        lst_text += f"Skyline {name}:\n    area: {sky.area()}\n    alçada: {sky.height()}\n"
 
     context.bot.send_message(chat_id=update.effective_chat.id, text=lst_text)
 
@@ -87,10 +92,10 @@ def save(update, context):
         context.bot.send_message(chat_id=update.effective_chat.id, text="Identificador no trobat")
         return
 
-    path = os.path.join("data", user_id, f"{identifier}.sky")
+    path = f"data/{user_id}/{identifier}.sky"
 
     with open(path, "wb") as f:
-        pickle.dump(users[user_id][identifier], f)
+        pickle.dump(users[user_id][identifier], f, protocol=pickle.HIGHEST_PROTOCOL)
 
     context.bot.send_message(chat_id=update.effective_chat.id, text="Skyline desada correctament")
 
@@ -107,24 +112,45 @@ def load(update, context):
         return
 
     identifier = context.args[0]
-    path = os.path.join("data", user_id, f"{identifier}.sky")
+    path = f"data/{user_id}/{identifier}.sky"
 
     if not os.path.isfile(path):
         context.bot.send_message(chat_id=update.effective_chat.id, text="Identificador no trobat")
         return
 
-    with open(path, "wb") as f:
+    with open(path, "rb") as f:
         users[user_id][identifier] = pickle.load(f)
 
     context.bot.send_message(chat_id=update.effective_chat.id, text="Skyline carregada correctament")
 
+def parse_text(text, skylines):
+    input_stream = InputStream(text)
+
+    lexer = SkylineLexer(input_stream)
+    token_stream = CommonTokenStream(lexer)
+    parser = SkylineParser(token_stream)
+    tree = parser.root()
+
+    visitor = TreeVisitor(skylines)
+    return visitor.visit(tree)
 
 def handle_message(update, context):
-    # TODO: Parse message
-    context.bot.send_message(chat_id=update.effective_chat.id, text=update.message.text)
-    # to send an image
-    # buf = sky.plot()
-    # context.bot.send_photo(chat_id=update.effective_chat.id, photo=buf)
+    user_id = update.message.chat.id
+    create_data_dir(user_id)
+
+    if user_id not in users:
+        users[user_id] = {}
+        
+    text = update.message.text
+    try:
+        sky = parse_text(text, users[user_id])
+        response = f"area: {sky.area()}\nalçada: {sky.height()}"
+        context.bot.send_photo(chat_id=update.effective_chat.id, photo=sky.plot())
+        context.bot.send_message(chat_id=update.effective_chat.id, text=response)
+    except:
+        context.bot.send_message(chat_id=update.effective_chat.id, text="No he entès el teu missatge :(")
+
+
 
 
 users = {}
