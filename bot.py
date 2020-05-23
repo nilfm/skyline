@@ -8,11 +8,13 @@ import pickle
 import sys
 from antlr4 import *
 
+
 def start_message(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text="SkyLineBot\nBenvingut Nil!")
 
+
 def author_message(update, context):
-    context.bot.send_message(chat_id=update.effective_chat.id, text="SkyLineBot\n@ Nil Fons Miret, 2020")
+    context.bot.send_message(chat_id=update.effective_chat.id, text="SkyLineBot\nNil Fons Miret, 2020\nnil.fons@est.fib.upc.edu")
 
 
 def help_message(update, context):
@@ -55,7 +57,7 @@ def lst(update, context):
         lst_text = "No hi ha cap skyline desat"
     else:
         lst_text = ""
-    
+
     for name, sky in skylines.items():
         lst_text += f"Skyline {name}:\n    area: {sky.area()}\n    alçada: {sky.height()}\n"
 
@@ -120,8 +122,9 @@ def load(update, context):
 
     with open(path, "rb") as f:
         users[user_id][identifier] = pickle.load(f)
-    
+
     context.bot.send_message(chat_id=update.effective_chat.id, text="Skyline carregada correctament")
+
 
 def parse_text(text, skylines):
     input_stream = InputStream(text)
@@ -134,13 +137,14 @@ def parse_text(text, skylines):
     visitor = EvalVisitor(skylines)
     return visitor.visit(tree)
 
+
 def handle_message(update, context):
     user_id = update.message.chat.id
     create_data_dir(user_id)
 
     if user_id not in users:
         users[user_id] = {}
-        
+
     text = update.message.text
     try:
         sky = parse_text(text, users[user_id])
@@ -151,8 +155,6 @@ def handle_message(update, context):
         context.bot.send_message(chat_id=update.effective_chat.id, text=f"Error: {e}")
     except Exception as e:
         context.bot.send_message(chat_id=update.effective_chat.id, text="No he entès el teu missatge :(")
-
-
 
 
 users = {}

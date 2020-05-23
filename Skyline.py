@@ -2,8 +2,10 @@ import random
 import matplotlib.pyplot as plt
 from io import BytesIO
 
+
 class WrongArgumentException(Exception):
     pass
+
 
 class Point:
     def __init__(self, x, y):
@@ -20,6 +22,7 @@ class Point:
         Returns a string representing a Point object
         """
         return f"<Point ({self.x}, {self.y})>"
+
 
 class Skyline:
     def __init__(self, points):
@@ -44,7 +47,7 @@ class Skyline:
             return b.shift_right(a)
         else:
             return Skyline.join_two_skylines(a, b)
-            
+
     @staticmethod
     def prod(a, b):
         if isinstance(b, int):
@@ -53,7 +56,7 @@ class Skyline:
             return b.replicate(a)
         else:
             return Skyline.intersect_two_skylines(a, b)
-    
+
     @staticmethod
     def subtract(a, b):
         return a.shift_left(b)
@@ -71,9 +74,9 @@ class Skyline:
         for i in range(n):
             displacement = i * width
             result.extend([Point(p.x + displacement, p.y) for p in self.points[:-1]])
-        last_x = self.points[-1].x + (n-1)*width
+        last_x = self.points[-1].x + (n - 1) * width
         result.append(Point(last_x, 0))
-        
+
         return Skyline(result)
 
     def shift_right(self, n):
@@ -137,7 +140,7 @@ class Skyline:
             xs.append(p1.x)
             heights.append(p1.y)
             widths.append(p2.x - p1.x)
-        
+
         plt.figure()
         plt.bar(xs, heights, widths, align="edge")
         buf = BytesIO()
@@ -157,7 +160,7 @@ class Skyline:
             raise WrongArgumentException("La coordenada xmax ha de ser major que xmin")
         if height < 0:
             raise WrongArgumentException("L'altura ha de ser no negativa")
-            
+
         points = [Point(start, height), Point(end, 0)]
         return Skyline(points)
 
@@ -182,9 +185,9 @@ class Skyline:
             raise WrongArgumentException("La coordenada xmax ha de ser més gran que xmin")
         if h < 0:
             raise WrongArgumentException("L'altura ha de ser no negativa")
-        if w > xmax-xmin:
-            raise WrongArgumentException("L'amplada ha de ser menor o igual a xmax-xmin")
-        
+        if w > xmax - xmin or w < 1:
+            raise WrongArgumentException("L'amplada ha de ser menor o igual a xmax-xmin i positiva")
+
         skylines = []
         for _ in range(n):
             width = random.randint(1, w)
@@ -287,39 +290,39 @@ class Skyline:
         result = []
         i = 0
         j = 0
-        while i < len(skyline1.points)-1 and j < len(skyline2.points)-1:
+        while i < len(skyline1.points) - 1 and j < len(skyline2.points) - 1:
             p1 = skyline1.points[i]
             p2 = skyline2.points[j]
-            q1 = skyline1.points[i+1]
-            q2 = skyline2.points[j+1]
+            q1 = skyline1.points[i + 1]
+            q2 = skyline2.points[j + 1]
 
             # 6 possible relative positions
             if p2.x > q1.x:
                 i += 1
-            
+
             elif p1.x > q2.x:
                 j += 1
-                
+
             elif p1.x <= p2.x and q1.x >= q2.x:
                 Skyline.add_to_result(result, p2.x, min(p1.y, p2.y), min)
                 j += 1
-            
+
             elif p2.x <= p1.x and q2.x >= q1.x:
                 Skyline.add_to_result(result, p1.x, min(p1.y, p2.y), min)
                 i += 1
-                
+
             elif p1.x <= p2.x and q1.x <= q2.x:
                 Skyline.add_to_result(result, p2.x, min(p1.y, p2.y), min)
-                i += 1 
-                
+                i += 1
+
             else:
                 Skyline.add_to_result(result, p1.x, min(p1.y, p2.y), min)
                 j += 1
-        
+
         # if result is nonempty, need to add the zero point at the end
         if result:
             last1 = skyline1.points[-1]
             last2 = skyline2.points[-1]
             Skyline.add_to_result(result, min(last1.x, last2.x), 0, min)
-                
+
         return Skyline(result)
