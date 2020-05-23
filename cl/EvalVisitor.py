@@ -5,9 +5,9 @@ else:
     from cl.SkylineParser import SkylineParser
     from cl.SkylineVisitor import SkylineVisitor
     
-from skyline import Skyline, WrongArgumentException
+from Skyline import Skyline, WrongArgumentException
 
-class TreeVisitor(SkylineVisitor):   
+class EvalVisitor(SkylineVisitor):   
     def __init__(self, skylines):
         self.skylines = skylines
         

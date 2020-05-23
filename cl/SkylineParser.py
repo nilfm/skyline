@@ -1,4 +1,4 @@
-# Generated from Skyline.g by ANTLR 4.7.2
+# Generated from Skyline.g4 by ANTLR 4.7.2
 # encoding: utf-8
 from antlr4 import *
 from io import StringIO
@@ -46,7 +46,7 @@ def serializedATN():
 
 class SkylineParser ( Parser ):
 
-    grammarFileName = "Skyline.g"
+    grammarFileName = "Skyline.g4"
 
     atn = ATNDeserializer().deserialize(serializedATN())
 

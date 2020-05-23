@@ -1,8 +1,8 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from cl.SkylineLexer import SkylineLexer
 from cl.SkylineParser import SkylineParser
-from cl.TreeVisitor import TreeVisitor
-from skyline import Skyline, Point, WrongArgumentException
+from cl.EvalVisitor import EvalVisitor
+from Skyline import Skyline, Point, WrongArgumentException
 import os
 import pickle
 import sys
@@ -120,7 +120,7 @@ def load(update, context):
 
     with open(path, "rb") as f:
         users[user_id][identifier] = pickle.load(f)
-
+    
     context.bot.send_message(chat_id=update.effective_chat.id, text="Skyline carregada correctament")
 
 def parse_text(text, skylines):
@@ -131,7 +131,7 @@ def parse_text(text, skylines):
     parser = SkylineParser(token_stream)
     tree = parser.root()
 
-    visitor = TreeVisitor(skylines)
+    visitor = EvalVisitor(skylines)
     return visitor.visit(tree)
 
 def handle_message(update, context):

@@ -1,4 +1,4 @@
-# Generated from Skyline.g by ANTLR 4.7.2
+# Generated from Skyline.g4 by ANTLR 4.7.2
 from antlr4 import *
 from io import StringIO
 from typing.io import TextIO
@@ -74,7 +74,7 @@ class SkylineLexer(Lexer):
                   "PROD", "SEP", "LEFT_PAREN", "RIGHT_PAREN", "LEFT_SQUARE", 
                   "RIGHT_SQUARE", "DIGIT", "LETTER" ]
 
-    grammarFileName = "Skyline.g"
+    grammarFileName = "Skyline.g4"
 
     def __init__(self, input=None, output:TextIO = sys.stdout):
         super().__init__(input, output)
