@@ -67,7 +67,7 @@ def lst(update, context):
 def clean(update, context):
     user_id = update.message.chat.id
     create_data_dir(user_id)
-    user[user_id] = {}
+    users[user_id].clear()
     context.bot.send_message(chat_id=update.effective_chat.id, text="Tots els identificadors esborrats")
 
 
