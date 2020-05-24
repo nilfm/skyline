@@ -34,13 +34,20 @@ class Skyline:
         self.points = points
 
     def __repr__(self):
-        result = ""
+        """
+        Returns a string representing a Skyline object
+        """
+        result = f"<Skyline with {len(self.points)} points>\n"
         for point in self.points:
-            result += str(point) + "\n"
+            result += f"  {point}\n"
         return result
 
     @staticmethod
     def add(a, b):
+        """
+        Applies the operator + to two objects, that can be (Skyline, Skyline), (int, Skyline) or (Skyline, int)
+        Complexity: Linear in both cases
+        """
         if isinstance(b, int):
             return a.shift_right(b)
         elif isinstance(a, int):
@@ -50,6 +57,10 @@ class Skyline:
 
     @staticmethod
     def prod(a, b):
+        """
+        Applies the operator * to two objects, that can be (Skyline, Skyline), (int, Skyline) or (Skyline, int)
+        Complexity: Linear in both cases
+        """
         if isinstance(b, int):
             return a.replicate(b)
         elif isinstance(a, int):
@@ -59,6 +70,10 @@ class Skyline:
 
     @staticmethod
     def subtract(a, b):
+        """
+        Applies the operator - to a Skyline object and an int object (in this order)
+        Complexity: Linear
+        """
         return a.shift_left(b)
 
     def replicate(self, n):
