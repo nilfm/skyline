@@ -11,7 +11,8 @@ from antlr4 import *
 
 
 def start_message(update, context):
-    context.bot.send_message(chat_id=update.effective_chat.id, text="SkyLineBot\nBenvingut Nil!")
+    name = update.message.chat.first_name
+    context.bot.send_message(chat_id=update.effective_chat.id, text=f"SkyLineBot\nBenvingut {name}!")
 
 
 def author_message(update, context):
