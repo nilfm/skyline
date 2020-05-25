@@ -49,9 +49,9 @@ The bot can also parse messages that allow the user to manipulate the skylines. 
 * The union of two skylines is represented by `skyline1 + skyline2`.
 * The intersection of two skylines is represented by `skyline1 * skyline2`.
 * The reflection of a skyline is represented by the unary negation operator: `-skyline`.
-* The right shift by `n` units of a skyline is represented by `skyline + n` or `n + skyline`.
+* The right shift by `n` units of a skyline is represented by `skyline + n`.
 * The left shift by `n` units of a skyline is represented by `skyline - n`.
-* The replication `n` times of a skyline is represented by `skyline * n` or `n * skyline`
+* The replication `n` times of a skyline is represented by `skyline * n`.
 
 Any of the previous operations can be stored into a variable with an identifier as follows: `a1 := (1, 2, 3)`. The identifiers can then be used in expressions. A valid identifier is a letter followed by zero or more digits or letters.
 

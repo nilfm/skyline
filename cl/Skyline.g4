@@ -10,11 +10,9 @@ expr : constructor
     | LEFT_PAREN expr RIGHT_PAREN
     | MINUS expr
     | expr PROD num
-    | num PROD expr
     | expr PROD expr
     | expr PLUS expr
     | expr PLUS num
-    | num PLUS expr
     | expr MINUS num ;
 
 

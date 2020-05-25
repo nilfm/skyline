@@ -50,8 +50,6 @@ class Skyline:
         """
         if isinstance(b, int):
             return a.shift_right(b)
-        elif isinstance(a, int):
-            return b.shift_right(a)
         else:
             return Skyline.join_two_skylines(a, b)
 
@@ -63,8 +61,6 @@ class Skyline:
         """
         if isinstance(b, int):
             return a.replicate(b)
-        elif isinstance(a, int):
-            return b.replicate(a)
         else:
             return Skyline.intersect_two_skylines(a, b)
 
