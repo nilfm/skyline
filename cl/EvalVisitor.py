@@ -49,7 +49,7 @@ class EvalVisitor(SkylineVisitor):
             return self.visit(ctx.expr(0))
 
         # Case 4: The expr is a unary minus
-        elif ctx.MINUS() and ctx.getChildCount() == 2:  # TOCHECK
+        elif ctx.MINUS() and ctx.getChildCount() == 2:
             return self.visit(ctx.expr(0)).invert()
 
         # Case 5: The expr is anything else

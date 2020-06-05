@@ -42,10 +42,16 @@ class Skyline:
             result += f"  {point}\n"
         return result
 
+    def copy(self):
+        """
+        Returns a deep copy of the instance
+        """
+        return Skyline(self.points.copy())
+
     @staticmethod
     def add(a, b):
         """
-        Applies the operator + to two objects, that can be (Skyline, Skyline), (int, Skyline) or (Skyline, int)
+        Applies the operator + to two objects, that can be (Skyline, Skyline) or (Skyline, int)
         Complexity: Linear in both cases
         """
         if isinstance(b, int):
@@ -56,7 +62,7 @@ class Skyline:
     @staticmethod
     def prod(a, b):
         """
-        Applies the operator * to two objects, that can be (Skyline, Skyline), (int, Skyline) or (Skyline, int)
+        Applies the operator * to two objects, that can be (Skyline, Skyline) or (Skyline, int)
         Complexity: Linear in both cases
         """
         if isinstance(b, int):
@@ -235,9 +241,9 @@ class Skyline:
         Complexity: Linear in the number of points of both skylines
         """
         if not skyline1:
-            return skyline2
+            return skyline2.copy()
         if not skyline2:
-            return skyline1
+            return skyline1.copy()
         i = 0
         j = 0
         height1 = 0
@@ -273,7 +279,7 @@ class Skyline:
         Complexity: O(N*logN) where N is the number of buildings
         """
         if left == right:
-            return skylines[left]
+            return skylines[left].copy()
 
         mid = (left + right) // 2
         skylines1 = Skyline.recursive_join_skylines(skylines, left, mid)

@@ -16,29 +16,29 @@ def serializedATN():
         buf.write("\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\7\3\7\3\7\3\7\7\7O\n")
         buf.write("\7\f\7\16\7R\13\7\3\7\3\7\3\b\3\b\3\b\3\b\3\b\3\b\3\b")
         buf.write("\3\b\3\b\3\b\3\b\3\b\3\t\3\t\3\n\3\n\3\n\2\3\6\13\2\4")
-        buf.write("\6\b\n\f\16\20\22\2\2\2h\2\24\3\2\2\2\4\34\3\2\2\2\6\'")
+        buf.write("\6\b\n\f\16\20\22\2\2\2i\2\24\3\2\2\2\4\34\3\2\2\2\6\'")
         buf.write("\3\2\2\2\b@\3\2\2\2\nB\3\2\2\2\fJ\3\2\2\2\16U\3\2\2\2")
         buf.write("\20a\3\2\2\2\22c\3\2\2\2\24\25\5\4\3\2\25\26\7\2\2\3\26")
         buf.write("\3\3\2\2\2\27\30\5\20\t\2\30\31\7\6\2\2\31\32\5\6\4\2")
         buf.write("\32\35\3\2\2\2\33\35\5\6\4\2\34\27\3\2\2\2\34\33\3\2\2")
-        buf.write("\2\35\5\3\2\2\2\36\37\b\4\1\2\37(\5\b\5\2 (\5\20\t\2!")
-        buf.write("\"\7\13\2\2\"#\5\6\4\2#$\7\f\2\2$(\3\2\2\2%&\7\b\2\2&")
-        buf.write("(\5\6\4\b\'\36\3\2\2\2\' \3\2\2\2\'!\3\2\2\2\'%\3\2\2")
-        buf.write("\2(:\3\2\2\2)*\f\6\2\2*+\7\t\2\2+9\5\6\4\7,-\f\5\2\2-")
-        buf.write(".\7\7\2\2.9\5\6\4\6/\60\f\7\2\2\60\61\7\t\2\2\619\5\22")
-        buf.write("\n\2\62\63\f\4\2\2\63\64\7\7\2\2\649\5\22\n\2\65\66\f")
-        buf.write("\3\2\2\66\67\7\b\2\2\679\5\22\n\28)\3\2\2\28,\3\2\2\2")
-        buf.write("8/\3\2\2\28\62\3\2\2\28\65\3\2\2\29<\3\2\2\2:8\3\2\2\2")
-        buf.write(":;\3\2\2\2;\7\3\2\2\2<:\3\2\2\2=A\5\n\6\2>A\5\f\7\2?A")
-        buf.write("\5\16\b\2@=\3\2\2\2@>\3\2\2\2@?\3\2\2\2A\t\3\2\2\2BC\7")
-        buf.write("\13\2\2CD\5\22\n\2DE\7\n\2\2EF\5\22\n\2FG\7\n\2\2GH\5")
-        buf.write("\22\n\2HI\7\f\2\2I\13\3\2\2\2JK\7\r\2\2KP\5\n\6\2LM\7")
-        buf.write("\n\2\2MO\5\n\6\2NL\3\2\2\2OR\3\2\2\2PN\3\2\2\2PQ\3\2\2")
-        buf.write("\2QS\3\2\2\2RP\3\2\2\2ST\7\16\2\2T\r\3\2\2\2UV\7\13\2")
-        buf.write("\2VW\5\22\n\2WX\7\n\2\2XY\5\22\n\2YZ\7\n\2\2Z[\5\22\n")
-        buf.write("\2[\\\7\n\2\2\\]\5\22\n\2]^\7\n\2\2^_\5\22\n\2_`\7\f\2")
-        buf.write("\2`\17\3\2\2\2ab\7\3\2\2b\21\3\2\2\2cd\7\4\2\2d\23\3\2")
-        buf.write("\2\2\b\34\'8:@P")
+        buf.write("\2\35\5\3\2\2\2\36(\b\4\1\2\37 \7\13\2\2 !\5\6\4\2!\"")
+        buf.write("\7\f\2\2\"(\3\2\2\2#(\5\b\5\2$(\5\20\t\2%&\7\b\2\2&(\5")
+        buf.write("\6\4\b\'\36\3\2\2\2\'\37\3\2\2\2\'#\3\2\2\2\'$\3\2\2\2")
+        buf.write("\'%\3\2\2\2(:\3\2\2\2)*\f\6\2\2*+\7\t\2\2+9\5\6\4\7,-")
+        buf.write("\f\5\2\2-.\7\7\2\2.9\5\6\4\6/\60\f\7\2\2\60\61\7\t\2\2")
+        buf.write("\619\5\22\n\2\62\63\f\4\2\2\63\64\7\7\2\2\649\5\22\n\2")
+        buf.write("\65\66\f\3\2\2\66\67\7\b\2\2\679\5\22\n\28)\3\2\2\28,")
+        buf.write("\3\2\2\28/\3\2\2\28\62\3\2\2\28\65\3\2\2\29<\3\2\2\2:")
+        buf.write("8\3\2\2\2:;\3\2\2\2;\7\3\2\2\2<:\3\2\2\2=A\5\n\6\2>A\5")
+        buf.write("\f\7\2?A\5\16\b\2@=\3\2\2\2@>\3\2\2\2@?\3\2\2\2A\t\3\2")
+        buf.write("\2\2BC\7\13\2\2CD\5\22\n\2DE\7\n\2\2EF\5\22\n\2FG\7\n")
+        buf.write("\2\2GH\5\22\n\2HI\7\f\2\2I\13\3\2\2\2JK\7\r\2\2KP\5\n")
+        buf.write("\6\2LM\7\n\2\2MO\5\n\6\2NL\3\2\2\2OR\3\2\2\2PN\3\2\2\2")
+        buf.write("PQ\3\2\2\2QS\3\2\2\2RP\3\2\2\2ST\7\16\2\2T\r\3\2\2\2U")
+        buf.write("V\7\13\2\2VW\5\22\n\2WX\7\n\2\2XY\5\22\n\2YZ\7\n\2\2Z")
+        buf.write("[\5\22\n\2[\\\7\n\2\2\\]\5\22\n\2]^\7\n\2\2^_\5\22\n\2")
+        buf.write("_`\7\f\2\2`\17\3\2\2\2ab\7\3\2\2b\21\3\2\2\2cd\7\4\2\2")
+        buf.write("d\23\3\2\2\2\b\34\'8:@P")
         return buf.getvalue()
 
 
@@ -209,14 +209,6 @@ class SkylineParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def constructor(self):
-            return self.getTypedRuleContext(SkylineParser.ConstructorContext,0)
-
-
-        def identifier(self):
-            return self.getTypedRuleContext(SkylineParser.IdentifierContext,0)
-
-
         def LEFT_PAREN(self):
             return self.getToken(SkylineParser.LEFT_PAREN, 0)
 
@@ -229,6 +221,14 @@ class SkylineParser ( Parser ):
 
         def RIGHT_PAREN(self):
             return self.getToken(SkylineParser.RIGHT_PAREN, 0)
+
+        def constructor(self):
+            return self.getTypedRuleContext(SkylineParser.ConstructorContext,0)
+
+
+        def identifier(self):
+            return self.getTypedRuleContext(SkylineParser.IdentifierContext,0)
+
 
         def MINUS(self):
             return self.getToken(SkylineParser.MINUS, 0)
@@ -267,25 +267,28 @@ class SkylineParser ( Parser ):
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,1,self._ctx)
             if la_ == 1:
-                self.state = 29
-                self.constructor()
                 pass
 
             elif la_ == 2:
-                self.state = 30
-                self.identifier()
-                pass
-
-            elif la_ == 3:
-                self.state = 31
+                self.state = 29
                 self.match(SkylineParser.LEFT_PAREN)
-                self.state = 32
+                self.state = 30
                 self.expr(0)
-                self.state = 33
+                self.state = 31
                 self.match(SkylineParser.RIGHT_PAREN)
                 pass
 
+            elif la_ == 3:
+                self.state = 33
+                self.constructor()
+                pass
+
             elif la_ == 4:
+                self.state = 34
+                self.identifier()
+                pass
+
+            elif la_ == 5:
                 self.state = 35
                 self.match(SkylineParser.MINUS)
                 self.state = 36

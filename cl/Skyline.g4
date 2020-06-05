@@ -5,9 +5,10 @@ root : base_expr EOF ;
 base_expr : identifier ASSIG expr 
     | expr;
 
-expr : constructor
+expr :
+    | LEFT_PAREN expr RIGHT_PAREN 
+    | constructor
     | identifier
-    | LEFT_PAREN expr RIGHT_PAREN
     | MINUS expr
     | expr PROD num
     | expr PROD expr
