@@ -7,7 +7,7 @@ import sys
 
 def serializedATN():
     with StringIO() as buf:
-        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\20")
+        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\22")
         buf.write("f\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b")
         buf.write("\t\b\4\t\t\t\4\n\t\n\3\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\5")
         buf.write("\3\35\n\3\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\5\4(\n\4")
@@ -35,10 +35,10 @@ def serializedATN():
         buf.write("\2\2GH\5\22\n\2HI\7\f\2\2I\13\3\2\2\2JK\7\r\2\2KP\5\n")
         buf.write("\6\2LM\7\n\2\2MO\5\n\6\2NL\3\2\2\2OR\3\2\2\2PN\3\2\2\2")
         buf.write("PQ\3\2\2\2QS\3\2\2\2RP\3\2\2\2ST\7\16\2\2T\r\3\2\2\2U")
-        buf.write("V\7\13\2\2VW\5\22\n\2WX\7\n\2\2XY\5\22\n\2YZ\7\n\2\2Z")
+        buf.write("V\7\17\2\2VW\5\22\n\2WX\7\n\2\2XY\5\22\n\2YZ\7\n\2\2Z")
         buf.write("[\5\22\n\2[\\\7\n\2\2\\]\5\22\n\2]^\7\n\2\2^_\5\22\n\2")
-        buf.write("_`\7\f\2\2`\17\3\2\2\2ab\7\3\2\2b\21\3\2\2\2cd\7\4\2\2")
-        buf.write("d\23\3\2\2\2\b\34\'8:@P")
+        buf.write("_`\7\20\2\2`\17\3\2\2\2ab\7\3\2\2b\21\3\2\2\2cd\7\4\2")
+        buf.write("\2d\23\3\2\2\2\b\34\'8:@P")
         return buf.getvalue()
 
 
@@ -54,11 +54,12 @@ class SkylineParser ( Parser ):
 
     literalNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                      "':='", "'+'", "'-'", "'*'", "','", "'('", "')'", "'['", 
-                     "']'" ]
+                     "']'", "'{'", "'}'" ]
 
     symbolicNames = [ "<INVALID>", "VALID_ID", "VALID_NUM", "WS", "ASSIG", 
                       "PLUS", "MINUS", "PROD", "SEP", "LEFT_PAREN", "RIGHT_PAREN", 
-                      "LEFT_SQUARE", "RIGHT_SQUARE", "DIGIT", "LETTER" ]
+                      "LEFT_SQUARE", "RIGHT_SQUARE", "LEFT_BRACE", "RIGHT_BRACE", 
+                      "DIGIT", "LETTER" ]
 
     RULE_root = 0
     RULE_base_expr = 1
@@ -87,8 +88,10 @@ class SkylineParser ( Parser ):
     RIGHT_PAREN=10
     LEFT_SQUARE=11
     RIGHT_SQUARE=12
-    DIGIT=13
-    LETTER=14
+    LEFT_BRACE=13
+    RIGHT_BRACE=14
+    DIGIT=15
+    LETTER=16
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -423,25 +426,24 @@ class SkylineParser ( Parser ):
         try:
             self.state = 62
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,4,self._ctx)
-            if la_ == 1:
+            token = self._input.LA(1)
+            if token in [SkylineParser.LEFT_PAREN]:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 59
                 self.single_building()
                 pass
-
-            elif la_ == 2:
+            elif token in [SkylineParser.LEFT_SQUARE]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 60
                 self.multiple_buildings()
                 pass
-
-            elif la_ == 3:
+            elif token in [SkylineParser.LEFT_BRACE]:
                 self.enterOuterAlt(localctx, 3)
                 self.state = 61
                 self.random_buildings()
                 pass
-
+            else:
+                raise NoViableAltException(self)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -592,8 +594,8 @@ class SkylineParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def LEFT_PAREN(self):
-            return self.getToken(SkylineParser.LEFT_PAREN, 0)
+        def LEFT_BRACE(self):
+            return self.getToken(SkylineParser.LEFT_BRACE, 0)
 
         def num(self, i:int=None):
             if i is None:
@@ -608,8 +610,8 @@ class SkylineParser ( Parser ):
             else:
                 return self.getToken(SkylineParser.SEP, i)
 
-        def RIGHT_PAREN(self):
-            return self.getToken(SkylineParser.RIGHT_PAREN, 0)
+        def RIGHT_BRACE(self):
+            return self.getToken(SkylineParser.RIGHT_BRACE, 0)
 
         def getRuleIndex(self):
             return SkylineParser.RULE_random_buildings
@@ -630,7 +632,7 @@ class SkylineParser ( Parser ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 83
-            self.match(SkylineParser.LEFT_PAREN)
+            self.match(SkylineParser.LEFT_BRACE)
             self.state = 84
             self.num()
             self.state = 85
@@ -650,7 +652,7 @@ class SkylineParser ( Parser ):
             self.state = 92
             self.num()
             self.state = 93
-            self.match(SkylineParser.RIGHT_PAREN)
+            self.match(SkylineParser.RIGHT_BRACE)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)

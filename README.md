@@ -40,7 +40,7 @@ The bot can also parse messages that allow the user to manipulate the skylines. 
 
 * The user can construct a skyline with a single building, by specifying the start x-coordinate, the height, and the end x-coordinate. An example would be `(1, 2, 3)`, where the building has height 2 and goes from the x-coordinates 1 to 3.
 * The user can construct a skyline with multiple buildings by entering a list with multiple single buildings. An example would be `[(1, 2, 3), (4, 5, 6)]`.
-* The user can construct a skyline with many randomly generated buildings by specifying some parameters `(n, h, w, xmin, xmax)`. An example would be `(100, 20, 4, 1, 1000)`. The meaning of the parameters is:
+* The user can construct a skyline with many randomly generated buildings by specifying some parameters `{n, h, w, xmin, xmax}`. An example would be `{100, 20, 4, 1, 1000}`. The meaning of the parameters is:
   * `n`: the amount of buildings
   * `h`: the maximum height of each building
   * `w`: the maximum width of each building

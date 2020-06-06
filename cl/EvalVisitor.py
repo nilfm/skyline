@@ -69,6 +69,10 @@ class EvalVisitor(SkylineVisitor):
         return self.visit(next(ctx.getChildren()))
 
     def visitSingle_building(self, ctx):
+        # Exceptional case where it accepts > 3 arguments, raise exception
+        if (ctx.getChildCount() != 7):
+            raise Exception()
+            
         params = []
         for child in ctx.getChildren():
             param = self.visit(child)

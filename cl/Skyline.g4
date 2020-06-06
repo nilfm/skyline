@@ -23,7 +23,7 @@ single_building : LEFT_PAREN num SEP num SEP num RIGHT_PAREN ;
 
 multiple_buildings : LEFT_SQUARE single_building (SEP single_building)* RIGHT_SQUARE ;
 
-random_buildings : LEFT_PAREN num SEP num SEP num SEP num SEP num RIGHT_PAREN ;
+random_buildings : LEFT_BRACE num SEP num SEP num SEP num SEP num RIGHT_BRACE ;
 
 identifier : VALID_ID;
 
@@ -41,5 +41,7 @@ LEFT_PAREN : '(' ;
 RIGHT_PAREN : ')' ;
 LEFT_SQUARE : '[' ;
 RIGHT_SQUARE : ']' ;
+LEFT_BRACE : '{' ;
+RIGHT_BRACE : '}' ;
 DIGIT : [0-9] ;
 LETTER : [a-z|A-Z] ;
