@@ -86,3 +86,7 @@ Persistent storage is achieved with the `pickle` module in the Python standard l
 ## PEP8 compliance
 
 The code for this program has been formatted with the `black` module. The settings used were the default ones except for line length, which was set to unlimited.
+
+## Known bugs
+
+The grammar doesn't accept expressions of the type IDENTIFIER MINUS NUMBER, without spaces. That is, "a-2" doesn't behave correctly, but "a - 2" and "a+2" do.
